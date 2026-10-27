@@ -34,5 +34,7 @@ docker compose up -d --build
 
 - Jobs cannot use `container:`: the runner's work directory lives in a volume
   of the runner container, which a job container cannot mount.
+- The runners get `/dev/kvm` for VM tests, so the Docker engine must have
+  nested virtualization enabled; without it the containers fail to start.
 - Root runs the jobs, so the image grants root sudo in `/etc/sudoers`; the base
   image ignores `/etc/sudoers.d`.

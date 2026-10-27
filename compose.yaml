@@ -7,9 +7,13 @@ x-runner: &runner
   env_file:
     - path: .env
       required: false
+  devices:
+    - /dev/kvm:/dev/kvm
   environment: &env
     RUNNER_ORG: unbound-linux
     RUNNER_LABELS: unbound
+    SCCACHE_DIR: /cache/sccache
+    SCCACHE_CACHE_SIZE: 50G
 
 services:
   runner-1:
@@ -22,6 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-1:/state
       - work-1:/work
+      - cache-1:/cache
 
   runner-2:
     <<: *runner
@@ -33,6 +38,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-2:/state
       - work-2:/work
+      - cache-2:/cache
 
   runner-3:
     <<: *runner
@@ -44,6 +50,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-3:/state
       - work-3:/work
+      - cache-3:/cache
 
 volumes:
   state-1:
@@ -52,3 +59,6 @@ volumes:
   work-1:
   work-2:
   work-3:
+  cache-1:
+  cache-2:
+  cache-3:

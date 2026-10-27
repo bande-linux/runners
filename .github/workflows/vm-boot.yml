@@ -1,0 +1,27 @@
+name: vm-boot
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  vm-boot:
+    runs-on: [self-hosted, unbound]
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Fetch Debian 13 arm64 image
+        run: |
+          mkdir -p /cache/images
+          cd /cache/images
+          base=https://cloud.debian.org/images/cloud/trixie/latest
+          image=debian-13-generic-arm64.qcow2
+          curl -fsSL "$base/SHA512SUMS" | grep " $image\$" > "$image.sha512"
+          sha512sum -c --quiet "$image.sha512" 2>/dev/null || curl -fsSLo "$image" "$base/$image"
+          sha512sum -c "$image.sha512"
+
+      - name: Boot it under QEMU/KVM
+        run: tests/vm-boot.sh /cache/images/debian-13-generic-arm64.qcow2

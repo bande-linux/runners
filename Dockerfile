@@ -5,7 +5,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         7zip bc bison build-essential ca-certificates clang cpio curl \
         device-tree-compiler flex git gnupg jq kmod libarchive-tools libelf-dev \
-        libssl-dev lld llvm python3 python3-pip python3-venv rsync wget xz-utils zstd \
+        libssl-dev lld llvm python3 python3-pip python3-venv qemu-efi-aarch64 qemu-system-arm \
+        qemu-utils cloud-image-utils rsync sccache wget xz-utils zstd \
     && curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-20 main" \
         > /etc/apt/sources.list.d/llvm-20.list \
