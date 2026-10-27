@@ -1,0 +1,54 @@
+name: unbound-runners
+
+x-runner: &runner
+  build: .
+  image: unbound-runner:2.338.0
+  restart: unless-stopped
+  env_file:
+    - path: .env
+      required: false
+  environment: &env
+    RUNNER_ORG: unbound-linux
+    RUNNER_LABELS: unbound
+
+services:
+  runner-1:
+    <<: *runner
+    hostname: unbound-runner-1
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-1:/state
+      - work-1:/work
+
+  runner-2:
+    <<: *runner
+    hostname: unbound-runner-2
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-2:/state
+      - work-2:/work
+
+  runner-3:
+    <<: *runner
+    hostname: unbound-runner-3
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-3:/state
+      - work-3:/work
+
+volumes:
+  state-1:
+  state-2:
+  state-3:
+  work-1:
+  work-2:
+  work-3:
