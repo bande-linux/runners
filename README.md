@@ -30,6 +30,18 @@ To update the image after changing the Dockerfile:
 docker compose up -d --build
 ```
 
+## Trying a job locally
+
+On a Mac with Velox running and nested virtualization enabled, build the image once with
+`docker build -t unbound-runner:local .`, then run a command on a copy of a working tree:
+
+```sh
+./local-run.sh ../desktop "cargo test --workspace"
+```
+
+The copy includes untracked files; caches for crates, toolchains and build output persist in
+named volumes between runs.
+
 ## Limits
 
 - Jobs cannot use `container:`: the runner's work directory lives in a volume
