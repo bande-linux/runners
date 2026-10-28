@@ -1,6 +1,6 @@
 # Unbound Linux CI runners
 
-Self-hosted GitHub Actions runners for the `unbound-linux` organization: three
+Self-hosted GitHub Actions runners for the `unbound-linux` organization: five
 Docker containers on an Apple Silicon Mac, each registered with the labels
 `self-hosted, Linux, ARM64, unbound`. Workflows select them with
 `runs-on: [self-hosted, unbound]`.

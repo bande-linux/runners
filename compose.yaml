@@ -52,13 +52,43 @@ services:
       - work-3:/work
       - cache-3:/cache
 
+  runner-4:
+    <<: *runner
+    hostname: unbound-runner-4
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-4
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-4:/state
+      - work-4:/work
+      - cache-4:/cache
+
+  runner-5:
+    <<: *runner
+    hostname: unbound-runner-5
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-5
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-5:/state
+      - work-5:/work
+      - cache-5:/cache
+
 volumes:
   state-1:
   state-2:
   state-3:
+  state-4:
+  state-5:
   work-1:
   work-2:
   work-3:
+  work-4:
+  work-5:
   cache-1:
   cache-2:
   cache-3:
+  cache-4:
+  cache-5:
