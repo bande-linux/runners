@@ -2,7 +2,7 @@ name: unbound-runners
 
 x-runner: &runner
   build: .
-  image: unbound-runner:2.338.0
+  image: unbound-runner:2.338.0-trixie
   restart: unless-stopped
   env_file:
     - path: .env
