@@ -29,6 +29,7 @@ services:
       - state-1:/state
       - work-1:/work
       - cache-1:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-2:
     <<: *runner
@@ -41,6 +42,7 @@ services:
       - state-2:/state
       - work-2:/work
       - cache-2:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-3:
     <<: *runner
@@ -53,6 +55,7 @@ services:
       - state-3:/state
       - work-3:/work
       - cache-3:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-4:
     <<: *runner
@@ -65,6 +68,7 @@ services:
       - state-4:/state
       - work-4:/work
       - cache-4:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-5:
     <<: *runner
@@ -77,6 +81,7 @@ services:
       - state-5:/state
       - work-5:/work
       - cache-5:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-6:
     <<: *runner
@@ -89,6 +94,7 @@ services:
       - state-6:/state
       - work-6:/work
       - cache-6:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-7:
     <<: *runner
@@ -101,6 +107,7 @@ services:
       - state-7:/state
       - work-7:/work
       - cache-7:/cache
+      - vm-cache:/cache/unbound-vm
 
   runner-8:
     <<: *runner
@@ -113,8 +120,11 @@ services:
       - state-8:/state
       - work-8:/work
       - cache-8:/cache
+      - vm-cache:/cache/unbound-vm
 
 volumes:
+  # One guest image cache for all runners; ci/vm/images.sh builds each recipe once under a lock.
+  vm-cache:
   state-1:
   state-2:
   state-3:
