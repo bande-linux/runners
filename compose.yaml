@@ -13,7 +13,7 @@ x-runner: &runner
     RUNNER_ORG: unbound-linux
     RUNNER_LABELS: unbound
     SCCACHE_DIR: /cache/sccache
-    # Five runners share one 150 GB VM disk with other services.
+    # Eight runners share one VM disk with other services.
     SCCACHE_CACHE_SIZE: 8G
     ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started.sh
 
@@ -78,6 +78,42 @@ services:
       - work-5:/work
       - cache-5:/cache
 
+  runner-6:
+    <<: *runner
+    hostname: unbound-runner-6
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-6
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-6:/state
+      - work-6:/work
+      - cache-6:/cache
+
+  runner-7:
+    <<: *runner
+    hostname: unbound-runner-7
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-7
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-7:/state
+      - work-7:/work
+      - cache-7:/cache
+
+  runner-8:
+    <<: *runner
+    hostname: unbound-runner-8
+    environment:
+      <<: *env
+      RUNNER_NAME: unbound-runner-8
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - state-8:/state
+      - work-8:/work
+      - cache-8:/cache
+
 volumes:
   state-1:
   state-2:
@@ -94,3 +130,12 @@ volumes:
   cache-3:
   cache-4:
   cache-5:
+  state-6:
+  work-6:
+  cache-6:
+  state-7:
+  work-7:
+  cache-7:
+  state-8:
+  work-8:
+  cache-8:

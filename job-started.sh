@@ -1,5 +1,5 @@
 #!/bin/bash
-# The five runners' /work and /cache volumes share one VM disk, so a runner drops its own build
+# The eight runners' /work and /cache volumes share one VM disk, so a runner drops its own build
 # outputs before a job when that disk runs low. Caches in /cache are bounded by their own limits.
 min_free_gib=30
 free_gib=$(( $(df -Pk /work | awk 'NR == 2 { print $4 }') / 1024 / 1024 ))
