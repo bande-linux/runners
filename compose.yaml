@@ -13,7 +13,9 @@ x-runner: &runner
     RUNNER_ORG: unbound-linux
     RUNNER_LABELS: unbound
     SCCACHE_DIR: /cache/sccache
-    SCCACHE_CACHE_SIZE: 50G
+    # Five runners share one 150 GB VM disk with other services.
+    SCCACHE_CACHE_SIZE: 8G
+    ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started
 
 services:
   runner-1:
