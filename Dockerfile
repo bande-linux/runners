@@ -33,7 +33,7 @@ RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --component 
         --target aarch64-unknown-none-softfloat,aarch64-unknown-linux-musl
 
 COPY entrypoint.sh /entrypoint.sh
-COPY job-started.sh /usr/local/bin/job-started
+COPY job-started.sh /usr/local/bin/job-started.sh
 RUN chmod 0755 /entrypoint.sh
 
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
