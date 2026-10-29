@@ -18,6 +18,24 @@ Debian repository and the build tools the repositories need; the jobs reach the
 Docker engine through its socket. GitHub offers no Debian images of its own
 runner, so this image replaces `ghcr.io/actions/actions-runner` (Ubuntu).
 
+The image also carries what the desktop's jobs would otherwise install on every run: its
+build and test packages, its pinned Rust toolchain and `cargo-deb`, so those steps find
+everything present and skip `apt-get`.
+
+## Compiler cache
+
+The four runners on a Mac share one compiler cache. Jobs compile through sccache (pinned
+upstream release; Debian's build has no remote backends), which keeps its entries in the
+`build-cache` service: nginx with WebDAV on the `build-cache` volume. nginx writes each upload
+to a temporary file and renames it into place, so a runner never reads a half-written entry,
+and every runner sees the others' entries as soon as they are stored. sccache's own disk cache
+is not used, because it assumes a single process owns its directory. `build-cache-trim`
+deletes the least recently read entries whenever the cache grows past `BUILD_CACHE_GIB`
+(default 20; set it in `.env` for a smaller disk), and unfinished uploads after an hour.
+If the cache is unreachable, `SCCACHE_IGNORE_SERVER_IO_ERROR` makes sccache compile without
+it instead of failing the job. To start over, `docker compose down` and remove the
+`build-cache` volume. A job's hit rate is in `sccache --show-stats`.
+
 ## Setup
 
 On the Mac, with Docker running and the repository cloned:
