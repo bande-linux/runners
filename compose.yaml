@@ -1,5 +1,9 @@
 name: unbound-runners
 
+# Four runners share one 8-CPU VM with other services: three for builds and tests, and one for jobs
+# that boot a KVM guest, so at most one guest runs at a time. Jobs pick it with
+# `runs-on: [self-hosted, unbound-kvm]`; everything else uses `[self-hosted, unbound]`.
+
 x-runner: &runner
   build: .
   image: unbound-runner:2.338.0-trixie
@@ -7,13 +11,10 @@ x-runner: &runner
   env_file:
     - path: .env
       required: false
-  devices:
-    - /dev/kvm:/dev/kvm
   environment: &env
     RUNNER_ORG: unbound-linux
     RUNNER_LABELS: unbound
     SCCACHE_DIR: /cache/sccache
-    # Eight runners share one VM disk with other services.
     SCCACHE_CACHE_SIZE: 8G
     ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started.sh
 
@@ -29,7 +30,6 @@ services:
       - state-1:/state
       - work-1:/work
       - cache-1:/cache
-      - vm-cache:/cache/unbound-vm
 
   runner-2:
     <<: *runner
@@ -42,7 +42,6 @@ services:
       - state-2:/state
       - work-2:/work
       - cache-2:/cache
-      - vm-cache:/cache/unbound-vm
 
   runner-3:
     <<: *runner
@@ -55,97 +54,32 @@ services:
       - state-3:/state
       - work-3:/work
       - cache-3:/cache
-      - vm-cache:/cache/unbound-vm
 
-  runner-4:
+  runner-kvm:
     <<: *runner
-    hostname: unbound-runner-4
+    hostname: unbound-runner-kvm
+    devices:
+      - /dev/kvm:/dev/kvm
     environment:
       <<: *env
-      RUNNER_NAME: unbound-runner-4
+      RUNNER_NAME: unbound-runner-kvm
+      RUNNER_LABELS: unbound-kvm
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - state-4:/state
-      - work-4:/work
-      - cache-4:/cache
-      - vm-cache:/cache/unbound-vm
-
-  runner-5:
-    <<: *runner
-    hostname: unbound-runner-5
-    environment:
-      <<: *env
-      RUNNER_NAME: unbound-runner-5
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - state-5:/state
-      - work-5:/work
-      - cache-5:/cache
-      - vm-cache:/cache/unbound-vm
-
-  runner-6:
-    <<: *runner
-    hostname: unbound-runner-6
-    environment:
-      <<: *env
-      RUNNER_NAME: unbound-runner-6
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - state-6:/state
-      - work-6:/work
-      - cache-6:/cache
-      - vm-cache:/cache/unbound-vm
-
-  runner-7:
-    <<: *runner
-    hostname: unbound-runner-7
-    environment:
-      <<: *env
-      RUNNER_NAME: unbound-runner-7
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - state-7:/state
-      - work-7:/work
-      - cache-7:/cache
-      - vm-cache:/cache/unbound-vm
-
-  runner-8:
-    <<: *runner
-    hostname: unbound-runner-8
-    environment:
-      <<: *env
-      RUNNER_NAME: unbound-runner-8
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - state-8:/state
-      - work-8:/work
-      - cache-8:/cache
-      - vm-cache:/cache/unbound-vm
+      - state-kvm:/state
+      - work-kvm:/work
+      - cache-kvm:/cache
 
 volumes:
-  # One guest image cache for all runners; ci/vm/images.sh builds each recipe once under a lock.
-  vm-cache:
   state-1:
   state-2:
   state-3:
-  state-4:
-  state-5:
+  state-kvm:
   work-1:
   work-2:
   work-3:
-  work-4:
-  work-5:
+  work-kvm:
   cache-1:
   cache-2:
   cache-3:
-  cache-4:
-  cache-5:
-  state-6:
-  work-6:
-  cache-6:
-  state-7:
-  work-7:
-  cache-7:
-  state-8:
-  work-8:
-  cache-8:
+  cache-kvm:
