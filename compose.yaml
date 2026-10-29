@@ -15,7 +15,7 @@ x-runner: &runner
     SCCACHE_DIR: /cache/sccache
     # Five runners share one 150 GB VM disk with other services.
     SCCACHE_CACHE_SIZE: 8G
-    ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started
+    ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started.sh
 
 services:
   runner-1:

@@ -21,7 +21,7 @@ RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --component 
 RUN echo "root ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 COPY entrypoint.sh /entrypoint.sh
-COPY job-started.sh /usr/local/bin/job-started
+COPY job-started.sh /usr/local/bin/job-started.sh
 RUN chmod 0755 /entrypoint.sh
 
 ENV RUNNER_ALLOW_RUNASROOT=1
