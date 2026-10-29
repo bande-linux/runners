@@ -1,11 +1,13 @@
 # Unbound Linux CI runners
 
 Self-hosted GitHub Actions runners for the `unbound-linux` organization, on two
-Apple Silicon Macs: the M4 Mac mini (`unbound-runner-1..3`, `unbound-runner-kvm`)
-and the laptop (`laptop-runner-1..3`, `laptop-runner-kvm`). Each Mac runs four
-Docker containers from the same `compose.yaml`. Three are registered with the labels
+Apple Silicon Macs: the M4 Mac mini (`unbound-runner-1..2`, `unbound-runner-kvm`)
+and the laptop (`laptop-runner-1..2`, `laptop-runner-kvm`). Each Mac runs three
+runner containers from the same `compose.yaml`, sized to the Docker VM's 12 GB: a fourth
+let enough Rust builds and KVM guests run at once to exhaust its memory. Two are registered
+with the labels
 `self-hosted, Linux, ARM64, unbound` and run builds and tests; workflows select
-them with `runs-on: [self-hosted, unbound]`. The fourth, labelled `unbound-kvm`,
+them with `runs-on: [self-hosted, unbound]`. The third, labelled `unbound-kvm`,
 is the only one with `/dev/kvm` and runs the jobs that boot a KVM guest, so at
 most one guest runs per Mac; those jobs use `runs-on: [self-hosted, unbound-kvm]`.
 GitHub hands each job to any free runner with matching labels, so both Macs share
@@ -24,7 +26,7 @@ everything present and skip `apt-get`.
 
 ## Compiler cache
 
-The four runners on a Mac share one compiler cache. Jobs compile through sccache (pinned
+The three runners on a Mac share one compiler cache. Jobs compile through sccache (pinned
 upstream release; Debian's build has no remote backends), which keeps its entries in the
 `build-cache` service: nginx with WebDAV on the `build-cache` volume. nginx writes each upload
 to a temporary file and renames it into place, so a runner never reads a half-written entry,

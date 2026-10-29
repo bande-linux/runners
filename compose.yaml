@@ -1,11 +1,12 @@
 name: unbound-runners
 
-# Four runners share one 8-CPU VM with other services: three for builds and tests, and one for jobs
-# that boot a KVM guest, so at most one guest runs at a time. Jobs pick it with
+# Three runners share one 8-CPU, 12 GB VM with other services: two for builds and tests, and one for
+# jobs that boot a KVM guest, so at most one guest runs at a time. A fourth runner let four Rust
+# builds (or three and a 4 GB guest) run at once, which ran the VM out of memory. Jobs pick it with
 # `runs-on: [self-hosted, unbound-kvm]`; everything else uses `[self-hosted, unbound]`.
 # RUNNER_HOST names the runners per machine (unbound-runner-1 on the mini, laptop-runner-1 with
 # RUNNER_HOST=laptop), so several machines can serve the same labels.
-# All four runners on a machine share one compiler cache: sccache stores its entries in the
+# All three runners on a machine share one compiler cache: sccache stores its entries in the
 # build-cache service over WebDAV, which writes each entry atomically and lets every runner see
 # every other runner's entries at once; build-cache-trim keeps it under BUILD_CACHE_GIB.
 
@@ -68,18 +69,6 @@ services:
       - work-2:/work
       - cache-2:/cache
 
-  runner-3:
-    <<: *runner
-    hostname: ${RUNNER_HOST:-unbound}-runner-3
-    environment:
-      <<: *env
-      RUNNER_NAME: ${RUNNER_HOST:-unbound}-runner-3
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - state-3:/state
-      - work-3:/work
-      - cache-3:/cache
-
   runner-kvm:
     <<: *runner
     hostname: ${RUNNER_HOST:-unbound}-runner-kvm
@@ -99,13 +88,10 @@ volumes:
   build-cache:
   state-1:
   state-2:
-  state-3:
   state-kvm:
   work-1:
   work-2:
-  work-3:
   work-kvm:
   cache-1:
   cache-2:
-  cache-3:
   cache-kvm:
