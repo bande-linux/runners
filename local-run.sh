@@ -16,5 +16,5 @@ git -C "$repo" ls-files -z --cached --others --exclude-standard |
         -v local-rustup:/root/.rustup \
         -v "local-target-$name:/target" \
         -e CARGO_TARGET_DIR=/target \
-        --entrypoint bash unbound-runner:local \
+        --entrypoint bash bande-runner:local \
         -c 'mkdir -p /work && cd /work && tar xf - && exec bash -lc "$0"' "$*"

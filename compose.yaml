@@ -1,21 +1,21 @@
-name: unbound-runners
+name: bande-runners
 
 # Four runners share one 8-CPU VM with other services: three for builds and tests, and one for jobs
 # that boot a KVM guest, so at most one guest runs at a time. Jobs pick it with
-# `runs-on: [self-hosted, unbound-kvm]`; everything else uses `[self-hosted, unbound]`.
-# RUNNER_HOST names the runners per machine (unbound-runner-1 on the mini, laptop-runner-1 with
+# `runs-on: [self-hosted, bande-kvm]`; everything else uses `[self-hosted, bande]`.
+# RUNNER_HOST names the runners per machine (bande-runner-1 on the mini, laptop-runner-1 with
 # RUNNER_HOST=laptop), so several machines can serve the same labels.
 
 x-runner: &runner
   build: .
-  image: unbound-runner:2.338.0-trixie
+  image: bande-runner:2.338.0-trixie
   restart: unless-stopped
   env_file:
     - path: .env
       required: false
   environment: &env
-    RUNNER_ORG: unbound-linux
-    RUNNER_LABELS: unbound
+    RUNNER_ORG: bande-linux
+    RUNNER_LABELS: bande
     SCCACHE_DIR: /cache/sccache
     SCCACHE_CACHE_SIZE: 8G
     ACTIONS_RUNNER_HOOK_JOB_STARTED: /usr/local/bin/job-started.sh
@@ -23,10 +23,10 @@ x-runner: &runner
 services:
   runner-1:
     <<: *runner
-    hostname: ${RUNNER_HOST:-unbound}-runner-1
+    hostname: ${RUNNER_HOST:-bande}-runner-1
     environment:
       <<: *env
-      RUNNER_NAME: ${RUNNER_HOST:-unbound}-runner-1
+      RUNNER_NAME: ${RUNNER_HOST:-bande}-runner-1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-1:/state
@@ -35,10 +35,10 @@ services:
 
   runner-2:
     <<: *runner
-    hostname: ${RUNNER_HOST:-unbound}-runner-2
+    hostname: ${RUNNER_HOST:-bande}-runner-2
     environment:
       <<: *env
-      RUNNER_NAME: ${RUNNER_HOST:-unbound}-runner-2
+      RUNNER_NAME: ${RUNNER_HOST:-bande}-runner-2
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-2:/state
@@ -47,10 +47,10 @@ services:
 
   runner-3:
     <<: *runner
-    hostname: ${RUNNER_HOST:-unbound}-runner-3
+    hostname: ${RUNNER_HOST:-bande}-runner-3
     environment:
       <<: *env
-      RUNNER_NAME: ${RUNNER_HOST:-unbound}-runner-3
+      RUNNER_NAME: ${RUNNER_HOST:-bande}-runner-3
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-3:/state
@@ -59,13 +59,13 @@ services:
 
   runner-kvm:
     <<: *runner
-    hostname: ${RUNNER_HOST:-unbound}-runner-kvm
+    hostname: ${RUNNER_HOST:-bande}-runner-kvm
     devices:
       - /dev/kvm:/dev/kvm
     environment:
       <<: *env
-      RUNNER_NAME: ${RUNNER_HOST:-unbound}-runner-kvm
-      RUNNER_LABELS: unbound-kvm
+      RUNNER_NAME: ${RUNNER_HOST:-bande}-runner-kvm
+      RUNNER_LABELS: bande-kvm
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - state-kvm:/state

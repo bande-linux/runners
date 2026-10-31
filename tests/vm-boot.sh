@@ -15,7 +15,7 @@ qemu-img create -q -f qcow2 -F qcow2 -b "$disk" overlay.qcow2
 cat > user-data <<'EOF'
 #cloud-config
 runcmd:
-  - [sh, -c, 'echo UNBOUND-VM-READY > /dev/ttyAMA0']
+  - [sh, -c, 'echo BANDE-VM-READY > /dev/ttyAMA0']
 EOF
 echo "instance-id: vm-boot" > meta-data
 cloud-localds seed.img user-data meta-data
@@ -32,7 +32,7 @@ qemu-system-aarch64 \
 qpid=$!
 
 start=$SECONDS
-until grep -q "login:" serial.log 2>/dev/null && grep -q "UNBOUND-VM-READY" serial.log; do
+until grep -q "login:" serial.log 2>/dev/null && grep -q "BANDE-VM-READY" serial.log; do
     if ! kill -0 "$qpid" 2>/dev/null; then
         echo "QEMU exited before the guest was ready"
         cat serial.log
