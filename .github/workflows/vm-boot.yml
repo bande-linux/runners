@@ -2,7 +2,7 @@ name: vm-boot
 
 on:
   push:
-    branches: [ main ]
+    tags: ['v*']
   workflow_dispatch:
 
 jobs:
